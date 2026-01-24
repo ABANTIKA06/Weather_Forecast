@@ -1,0 +1,101 @@
+#Import Libraries
+import pandas as pd
+import matplotlib.pyplot as plt
+import os   
+
+#Load the CSV file
+df = pd.read_csv("data/history.csv")
+
+#Check columns once
+print(df.columns.tolist())
+
+#Rename columns
+df = df.rename(columns={
+  "temperature_2m_mean (°C)": "mean_temp",
+  "temperature_2m_max (°C)": "max_temp",
+  "temperature_2m_min (°C)": "min_temp",
+})
+
+#Convert the time column to datetime and extract the year and month
+df["time"] = pd.to_datetime(df["time"])
+df["year"] = df["time"].dt.year
+df["month"] = df["time"].dt.month
+
+#Defining Seasons
+def get_season(month):
+  if month in [12, 1, 2]:
+    return "Winter"
+  elif month in [3, 4]:
+    return "Spring"
+  elif month in [5, 6, 7]:
+    return "Summer"
+  elif month in [9, 10, 11]:
+    return "Autumn"
+
+    
+df["season"] = df["month"].apply(get_season)
+
+#Year + Season + Mean Temp( For CSV Data)
+season_mean_temp = (
+df.groupby(["year", "season"]).agg(mean_temp=("mean_temp","mean"))
+.reset_index()
+)
+
+#Round seasonal temperature values for better readability
+season_mean_temp["mean_temp"] = season_mean_temp["mean_temp"].round(2)
+
+#Save the processed output
+os.makedirs("Processed", exist_ok = True)
+season_mean_temp.to_csv("Processed/Year_Season_Mean_Temp.csv", index=False)
+
+#Verification Output
+print("CSV Created Successfully!")
+print(season_mean_temp.head().to_string(index=False))
+
+#Seasonal Trend Plot Code
+df =pd.read_csv("Processed/Year_Season_Mean_Temp.csv")
+
+#Ensure sorting for correct line plots
+df =df.sort_values(["year","season"])
+
+#Plotting the seasonal trend
+plt.figure(figsize =(10,6))
+
+#Looping through all seasons in the dataframe
+for season in df["season"].unique():
+  #Filters Data forone season
+  season_df = df[df["season"] == season]
+  #Arrange Data from oldest year to newest year
+  season_df = season_df.sort_values("year")
+  #Take Mean Temp for 5 years straight 
+  season_df["rolling_5yr_mean"] = season_df["mean_temp"].rolling(window=5).mean()
+
+#Add Colors for Each Season
+colors = {
+  "Winter": "blue",
+  "Spring": "green",
+  "Summer": "orange",
+  "Autumn": "red"
+}
+
+
+#Plotting the year, season and Mean Temp
+for season in df["season"].unique():
+    season_df = df[df["season"] == season]
+
+    plt.plot(
+        season_df["year"],
+        season_df["mean_temp"],
+        marker="o",
+        color= colors[season],
+        label=season
+    )
+
+
+plt.xlabel("Year")
+plt.ylabel("Mean Temperature (°C)")
+plt.title("Seasonal Mean Temperature Trends (Kolkata, 1994–2025)")
+plt.legend()
+plt.grid(True)
+plt.tight_layout()
+plt.show()
