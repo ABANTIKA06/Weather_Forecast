@@ -27,9 +27,11 @@ def get_season(month):
     return "Winter"
   elif month in [3, 4]:
     return "Spring"
-  elif month in [5, 6, 7]:
+  elif month in [5, 6]:
     return "Summer"
-  elif month in [9, 10, 11]:
+  elif month in [7, 8]:
+    return "Monsoon"
+  elif month in [10, 11]:
     return "Autumn"
 
     
@@ -68,14 +70,15 @@ for season in df["season"].unique():
   #Arrange Data from oldest year to newest year
   season_df = season_df.sort_values("year")
   #Take Mean Temp for 5 years straight 
-  season_df["rolling_5yr_mean"] = season_df["mean_temp"].rolling(window=5).mean()
+  #season_df["rolling_5yr_mean"] = season_df["mean_temp"].rolling(window=5).mean()
 
 #Add Colors for Each Season
 colors = {
   "Winter": "blue",
   "Spring": "green",
-  "Summer": "orange",
-  "Autumn": "red"
+  "Summer": "yellow",
+  "Monsoon": "violet",
+  "Autumn": "orange"
 }
 
 
@@ -98,4 +101,12 @@ plt.title("Seasonal Mean Temperature Trends (Kolkata, 1994–2025)")
 plt.legend()
 plt.grid(True)
 plt.tight_layout()
+
+#Save the seasonal plot first
+plt.savefig("Processed/Seasonal_Mean_Temperature_Trends.png")
+
+
+#Then show the plot
 plt.show()
+
+
