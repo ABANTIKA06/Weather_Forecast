@@ -26,28 +26,28 @@ for season in df["season"].unique():
   #Arrange Data from oldest year to newest year
   season_df = season_df.sort_values("year")
 
-  #Take Mean Temp for 5 years straight 
-  season_df["rolling_5yr_mean"] = season_df["mean_temp"].rolling(window=5).mean()
+  #Take Mean Temp for 10 years straight 
+  season_df["rolling_10yr_mean"] = season_df["mean_temp"].rolling(window=10).mean()
 
   plt.plot(
     season_df["year"],
-    season_df["rolling_5yr_mean"],
+    season_df["rolling_10yr_mean"],
     marker ="o",
     label = season,
     color = colors[season]
-)
+  )
 
 #Plotting
 plt.xlabel("Year")
-plt.ylabel("Seasonal 5 Year Rolling Mean Temperature")
-plt.title("Seasonal 5 Year Rolling Mean Temperature Trends (Kolkata, 1994–2025)")
+plt.ylabel("Seasonal 10 Year Rolling Mean Temperature")
+plt.title("Seasonal 10 Year Rolling Mean Temperature Trends (Kolkata, 1994–2025)")
 plt.legend()
 plt.grid(True)
 plt.tight_layout()
 
 
-#Save plot for 5 yr rolling avg mean temp 
-plt.savefig("Plots/5Year_Rolling_Mean_Temp.png")
+#Save plot for 10 yr rolling avg mean temp 
+plt.savefig("Plots/10Year_Rolling_Mean_Temp.png")
 
 #Show the plot
 plt.show()

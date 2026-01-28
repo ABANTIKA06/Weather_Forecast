@@ -61,16 +61,7 @@ df =pd.read_csv("Processed/Year_Season_Mean_Temp.csv")
 df =df.sort_values(["year","season"])
 
 #Plotting the seasonal trend
-plt.figure(figsize =(10,6))
-
-#Looping through all seasons in the dataframe
-for season in df["season"].unique():
-  #Filters Data forone season
-  season_df = df[df["season"] == season]
-  #Arrange Data from oldest year to newest year
-  season_df = season_df.sort_values("year")
-  #Take Mean Temp for 5 years straight 
-  #season_df["rolling_5yr_mean"] = season_df["mean_temp"].rolling(window=5).mean()
+plt.figure(figsize =(10,6)
 
 #Add Colors for Each Season
 colors = {
@@ -80,7 +71,6 @@ colors = {
   "Monsoon": "violet",
   "Autumn": "orange"
 }
-
 
 #Plotting the year, season and Mean Temp
 for season in df["season"].unique():
@@ -104,7 +94,6 @@ plt.tight_layout()
 
 #Save the seasonal plot first
 plt.savefig("Processed/Seasonal_Mean_Temperature_Trends.png")
-
 
 #Then show the plot
 plt.show()
