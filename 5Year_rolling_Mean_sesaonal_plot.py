@@ -1,7 +1,7 @@
 #Import libraries
 import pandas as pd
 import matplotlib.pyplot as plt
-#hello abantika
+
 #Load the CSV file 
 df = pd.read_csv("Processed/Year_Season_Mean_Temp.csv")
 
