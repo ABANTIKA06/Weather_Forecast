@@ -32,7 +32,7 @@ plt.tight_layout()
 
 # Save the plot
 plt.savefig('Processed/warming_trend_plot.png', dpi=300, bbox_inches='tight')
-print("Plot saved as 'Processed/warming_trend_plot.png'")
+print("Plot saved as 'Plots/warming_trend_plot.png'")
 
 # Display the plot
 plt.show()

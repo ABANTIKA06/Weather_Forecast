@@ -1,0 +1,59 @@
+# Import Libraries
+import pandas as pd 
+import matplotlib.pyplot as plt             
+
+# Load Data
+df = pd.read_csv("Processed_Data/Yearly_temperature.csv")
+df.head()
+
+# Calculate Baseline Mean
+baseline_mean = df["mean_temp"].mean()
+print("Baseline Mean Temperature is: ",baseline_mean)
+
+# Calculate Standard Deviation
+std_dev = df["mean_temp"].std()
+print("Standard Deviation is: ",std_dev)
+
+# Calculate Z-score
+df["z_score"] = (df["mean_temp"] - baseline_mean) / std_dev
+print(df.head())
+
+# Define Function for Anomaly Detection
+def detect_anomaly(z):
+    if z >= 3:
+        return "Extremely Hot"
+    elif z <= -3:
+        return "Extremely Cold"
+    elif z > 2: 
+        return "Moderately Hot"
+    elif z < -2:
+        return "Moderately Cold"
+    else:
+        return "Normal"
+
+# Apply Function
+df["Anomaly_flag"] = df["z_score"].apply(detect_anomaly)
+print(df.head())
+
+# Mentioning Figure Size
+plt.figure(figsize=(10, 6))
+
+# Plotting
+plt.plot(df["year"],df["z_score"],marker = "o")
+
+# Zero Reference Line add
+plt.axhline(0, linestyle ="--") 
+
+# Upper and Lower threshold lines add
+plt.axhline(3, linestyle ="--")
+plt.axhline(-3, linestyle="--")
+
+plt.title("Z-Score based temperature anamoly detection")
+plt.xlabel("Year")
+plt.ylabel("Z-Score")
+
+# Save the figure
+plt.savefig("Plots/Z-scoreAnomaly_Detection")
+
+# Show the figure
+plt.show() 

@@ -1,0 +1,57 @@
+# Import Libraries
+import pandas as pd 
+import matplotlib.pyplot as plt 
+import numpy as np            
+
+# Load Data
+df = pd.read_csv("Processed_Data/Yearly_temperature.csv")
+df.head()
+
+# Calculate Baseline Temperature
+baseline_temp = df["mean_temp"].mean()
+print("Baseline Temperature is: ",baseline_temp)
+
+# Calculate Standard Deviation
+standard_deviation = df["mean_temp"].std()
+print("Standard Deviation is: ",standard_deviation)
+
+# Calculate Z-Score(Static Baseline)
+df["Z-Score"] = (df["mean_temp"]-baseline_temp)/standard_deviation
+df.head()
+
+# Sort year before calculating rolling Z-Score 
+df =df.sort_values("year")
+
+# Dynamic Rolling baseline (Recent 10years comparing)
+df["rolling_baseline"] = df["mean_temp"].rolling(window=10).mean()
+
+# Standard Deviation of last 10Years
+df["rolling_std"] = df["mean_temp"].rolling(window=10).std()
+
+# Measure how extreme this year is
+df["rolling_Z-Score"] =(df["mean_temp"]-df["rolling_baseline"])/df["rolling_std"]
+
+# If deviation is very large>2---> MARK ANOMALY AS 1 ELSE 0
+df["rolling_anomaly"] = np.where(abs(df["rolling_Z-Score"])> 2, 1, 0)
+
+# View Results
+print(df.head(19))
+
+# Visualization for Anomaly Detection
+
+# Mention Figure Size
+plt.figure(figsize=(12, 6))
+
+plt.plot(df["year"],df["rolling_Z-Score"], marker ="o")
+
+plt.axhline(2, linestyle = "--")
+plt.axhline(-2, linestyle = "--")
+plt.axhline(0, linestyle = "--")
+
+plt.title("Rolling Z-Score Temperature Anamoly")
+plt.xlabel("Year")
+plt.ylabel("Rolling Z-Score")
+
+plt.savefig("Plots/Dynamic_Rolling_Anamoly")
+
+plt.show()

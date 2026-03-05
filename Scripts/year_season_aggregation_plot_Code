@@ -61,7 +61,7 @@ df =pd.read_csv("Processed/Year_Season_Mean_Temp.csv")
 df =df.sort_values(["year","season"])
 
 #Plotting the seasonal trend
-plt.figure(figsize =(10,6)
+plt.figure(figsize =(10,6))
 
 #Add Colors for Each Season
 colors = {
@@ -93,7 +93,7 @@ plt.grid(True)
 plt.tight_layout()
 
 #Save the seasonal plot first
-plt.savefig("Processed/Seasonal_Mean_Temperature_Trends.png")
+plt.savefig("Plots/Seasonal_Mean_Temperature_Trends.png")
 
 #Then show the plot
 plt.show()
