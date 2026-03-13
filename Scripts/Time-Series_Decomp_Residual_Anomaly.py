@@ -29,8 +29,6 @@ df["trend"] = decomposition.trend.values
 df["seasonality"] = decomposition.seasonal.values
 df["residual"] = decomposition.resid.values
 
-# Drop NaN Values
-df = df.dropna()
 
 # Detect Residual Anomalies
 # Calculate residual standard deviation
@@ -40,9 +38,14 @@ print("The residual standard deviation is: ",residual_std)
 # Mark Anomalies
 df["residual_anomaly"] = np.where(abs(df["residual"]) > 1.5 * residual_std,1, 0)
 
+# Save final output to CSV
+df.to_csv("Processed_Data/Time_Series_Decompose.csv",index=False)
+
+# Drop NaN Values
+df = df.dropna()
+
 #print(df.head(20))
 print(df[["year","mean_temp","trend", "seasonality", "residual","residual_anomaly"]].head(30))
-
 
 # Visualize Residual Component
 plt.figure(figsize=(12,6))

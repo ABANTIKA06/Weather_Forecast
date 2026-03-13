@@ -35,6 +35,8 @@ def detect_anomaly(z):
 df["Anomaly_flag"] = df["z_score"].apply(detect_anomaly)
 print(df.head())
 
+# Visualization
+
 # Mentioning Figure Size
 plt.figure(figsize=(10, 6))
 
