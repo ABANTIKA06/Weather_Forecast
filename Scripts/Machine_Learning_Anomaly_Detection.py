@@ -8,8 +8,8 @@ import matplotlib.pyplot as plt
 df = pd.read_csv("Processed_Data/Time_Series_Decompose.csv")
 
 # Pick the mean_temp column in rowsxcol or Table Format 
-x = df[["mean_temp", "min_temp", "max_temp"]]
-#print(x)
+x = df[["mean_temp"]]
+print(x)
 
 # Create Model
 model = IsolationForest(contamination=0.1, random_state =1)

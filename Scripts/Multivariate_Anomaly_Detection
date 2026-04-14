@@ -1,0 +1,50 @@
+# Import Libraries
+from sklearn.ensemble import IsolationForest
+import numpy as np  
+import pandas as pd 
+import matplotlib.pyplot as plt 
+
+# Load final clean dataset
+df = pd.read_csv("Data_Raw/final_history.csv")
+
+# Select multivariate features
+features = df[[
+    "mean_temp",
+    "max_temp",
+    "min_temp",
+    "precipitation",
+    "cloud_cover",
+    "temp_range",
+    "temp_avg_change"
+]]
+
+# Create model
+model = IsolationForest(contamination=0.1, random_state=1)
+
+# Predict anomalies
+df["multi_anomaly"] = model.fit_predict(features)
+
+# Convert output (-1 → 1 anomaly, 0 normal)
+df["multi_anomaly"] = np.where(df["multi_anomaly"] == -1, 1, 0)
+
+print(df.head())
+print(len(df))
+
+# Visualization
+plt.figure(figsize=(10,6))
+
+plt.plot(df["date"], df["mean_temp"], label="Mean Temp", color="blue")
+
+anomalies = df[df["multi_anomaly"] == 1]
+
+plt.scatter(anomalies["date"],
+            anomalies["mean_temp"],
+            color="red",
+            s=20,
+            label="Anomalies")
+
+plt.legend()
+plt.grid(True)
+
+plt.savefig("Plots/Multivariate_Anomaly_Detection")
+plt.show()
